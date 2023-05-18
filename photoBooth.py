@@ -111,6 +111,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if (not self.current_image_path or not self.validate_serial_number(serial_number)):
             QMessageBox.warning(self, "Warning", "No photo selected or serial number is invalid.")
 
+        # If the serial number is valid and a photo is selected
         else:
             # Set the destination folder to reside in the database with the serial number as the folder name
             destination_folder = os.path.join(DATA_FOLDER, serial_number)
@@ -156,7 +157,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         """  
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"SN{serial_number}_{timestamp}_{status}"
+        file_name = f"{serial_number}_{timestamp}_{status}"
         return file_name
     
     def file_status_exists(self, destination_folder, status):
@@ -188,26 +189,29 @@ class MainWindow(QtWidgets.QMainWindow):
         date, time, serial number, status, comments, file save location
         If the file does not exist, creates a new one with headers.
         """
+
         now = datetime.datetime.now()
         date = now.strftime("%Y-%m-%d")
         time = now.strftime("%H:%M:%S")
         comments = self.commentsTextEdit.toPlainText()  # Assuming comments are obtained from a QTextEdit widget
 
+        #Check if CSV file exists or needs to be made
         file_exists = os.path.isfile(CSV_DATA_FILE)
 
+        # Add the entry to the CSV file
         with open(CSV_DATA_FILE, 'a', newline='') as f:
             writer = csv.writer(f)
+            # If the file does not exist, write the headers
             if not file_exists:
+                # Header format
                 writer.writerow(["Date", "Time", "Serial Number", "Status", "Comments", "File Save Location"])
+                # Entry format
             writer.writerow([date, time, serial_number, status, comments, destination_file])
 
     
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QIcon(ICON_FILE))
-
-    trayIcon = QSystemTrayIcon(QIcon(ICON_FILE), parent=app)
-    trayIcon.show()  # Display the tray icon
 
     # Some silly Windows stuff to make the taskbar icon look better
     # https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7/1552105#1552105
