@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>766</width>
-    <height>888</height>
+    <width>488</width>
+    <height>852</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>20</y>
-      <width>691</width>
+      <width>441</width>
       <height>351</height>
      </rect>
     </property>
@@ -48,8 +48,8 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>420</y>
+      <x>20</x>
+      <y>390</y>
       <width>441</width>
       <height>351</height>
      </rect>
@@ -102,17 +102,17 @@
          </property>
          <item>
           <property name="text">
-           <string>Received</string>
+           <string>Reception</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Tested</string>
+           <string>PostCycling</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Other</string>
+           <string>Misc</string>
           </property>
          </item>
         </widget>
@@ -163,9 +163,9 @@
    <widget class="QPushButton" name="addPhotoButton">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>780</y>
-      <width>381</width>
+      <x>20</x>
+      <y>750</y>
+      <width>331</width>
       <height>41</height>
      </rect>
     </property>
@@ -181,9 +181,9 @@
    <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>780</y>
-      <width>131</width>
+      <x>370</x>
+      <y>750</y>
+      <width>91</width>
       <height>41</height>
      </rect>
     </property>
@@ -202,7 +202,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>766</width>
+     <width>488</width>
      <height>18</height>
     </rect>
    </property>

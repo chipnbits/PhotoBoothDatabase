@@ -114,25 +114,28 @@ class MainWindow(QtWidgets.QMainWindow):
         # If the serial number is valid and a photo is selected
         else:
             # Set the destination folder to reside in the database with the serial number as the folder name
-            destination_folder = os.path.join(DATA_FOLDER, serial_number)
-            # Create the folder matching the serial number if it does not already exist
-            os.makedirs(destination_folder, exist_ok=True)
-            # Generate the file name according to naming convention
-            file_name = self.generate_file_name(serial_number, status)
-            # Create a save path
-            destination_file = os.path.join(destination_folder, file_name)
+            serial_number_folder = os.path.join(DATA_FOLDER, serial_number)
+            status_folder = os.path.join(serial_number_folder, status)
 
-            # Check if the file status type already exists in the database
-            # Recieved and Tested should usually only have one image per module in normal use cases
-            if status in ['Received', 'Tested'] and self.file_status_exists(destination_folder, status):
-                reply = QMessageBox.question(self, "File Duplicate Warning", "File with this status already exists. Are you sure you want to add another?", 
-                                             QMessageBox.Yes | QMessageBox.No)
-                if reply == QMessageBox.Yes:
-                    self.add_image_database(serial_number, status, destination_file)
-                else:
-                    QMessageBox.information(self, "Cancelled", "Operation cancelled.")
-            else:
-                self.add_image_database(serial_number, status, destination_file)
+            # # Check if serial number folder already exists, if not give warning
+            # if not os.path.exists(serial_number_folder):
+            #     reply = QMessageBox.question(self, "New Serial Number Warning", 
+            #         "This is a new serial number entry. Are you sure you want to add it?", QMessageBox.Yes | QMessageBox.No)
+            #     if reply == QMessageBox.No:
+            #         QMessageBox.information(self, "Cancelled", "Operation cancelled.")
+            #         return            
+
+        # Create the folder matching the serial number and status if they do not already exist
+        os.makedirs(status_folder, exist_ok=True)
+
+        # Generate the file name according to naming convention
+        file_name = self.generate_file_name(serial_number)
+
+        # Create a save path
+        destination_file = os.path.join(status_folder, file_name)
+
+        self.add_image_database(serial_number, status, destination_file)
+
 
     def add_image_database(self, serial_number, status, destination_file):
         """
@@ -151,25 +154,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # Replace this with more complex validation logic if needed
         return bool(serial_number and not serial_number.isspace())
     
-    def generate_file_name(self, serial_number, status):
+    def generate_file_name(self, serial_number):
         """
         @brief Generates a file name according to the naming convention specifed for the database.
 
         """  
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"{serial_number}_{timestamp}_{status}"
+        _, file_extension = os.path.splitext(self.current_image_path)  # Extract extension from the original file path
+        file_name = f"{serial_number}_{timestamp}{file_extension}"
         return file_name
-    
-    def file_status_exists(self, destination_folder, status):
-        """
-        Check if a file with the specified status already
-        exists in the destination folder.
-        """
-        for filename in os.listdir(destination_folder):
-            if status in filename:  # Checks if status keyword is in the filename
-                return True
-        return False
-    
+        
     def get_latest_file(self, dir_path):
         """
         Returns the path of the latest (most recently modified) file of the joined path(s)
