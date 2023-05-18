@@ -16,6 +16,8 @@ Note, this application is OS dependent and is made to run on a Windows machine
 
 Remember, when you use PyInstaller, you need to be in the active environment where you installed it (Windows in this case).
 ```
-pyinstaller --onefile --windowed --icon=trayicon.ico --add-data "photoBooth.ui;." --add-data "trayicon.ico;." --add-data "trayicon.png;." photoBooth.py
+pyinstaller --onefile --windowed --icon=trayicon.ico --add-data "photoBooth.ui;." --add-data "trayicon.ico;." --add-data "trayicon.png;." --add-data "config.json;." photoBooth.py
 ```
-This runs from the directory with all the files in it, the executable needs to be moved back into the main directory (containing .ui, etc) after the compilation happens or else it wont work
+This runs from the directory with all the files in it, the executable needs to be moved back into the main directory (containing .ui, etc) after the compilation happens or else it wont work.
+
+After the .exe from dist folder should be moved back into the main PhotoBooth folder so that it is in the same folder as the data files (ui, json, etc) 
