@@ -57,25 +57,43 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Assign function calls to the buttons
         self.openImageButton.clicked.connect(self.open_image)
-        self.addPhotoButton.clicked.connect(self.add_photo)
+        self.addPhotoButton.clicked.connect(self.add_photos)
         self.exitButton.clicked.connect(self.close)
+        self.previousButton.clicked.connect(self.go_previous)
+        self.nextButton.clicked.connect(self.go_next)
+
+        # Initialize the current image paths and current index
+        self.selected_image_paths = []
+        self.current_image_index = 0
 
         # Initialize the current image path (Image that is in the preview viewer)
         self.current_image_path = self.get_latest_file(DEFAULT_FOLDER)
         if self.current_image_path:  # If a latest file was found
+            self.selected_image_paths.append(self.current_image_path)  # Add the file to the list
             # Wait for main window to load before loading the image
             QtCore.QTimer.singleShot(0, lambda: self.preview_image(self.current_image_path))
+            # Update image count label
+            self.imageCounterLabel.setText("Image 1 of 1")
+
+        # Populate the serial number list
+        self.refresh_serial_number_list()
+        # Connect the selection signal to the handler function
+        self.serialNumberList.itemSelectionChanged.connect(self.serial_number_selected)    
+
 
     def open_image(self):
         """
-        @brief Opens a file dialog to select an image file and displays it in the label.
+        @brief Opens a file dialog to select multiple image files and displays the first in the label.
 
         """
-        fname, _ = QFileDialog.getOpenFileName(self, 'Open file',
-                                            DEFAULT_FOLDER, "Image files (*.jpg *.gif *.png)")
-        if fname:
-            self.current_image_path = fname
-            self.preview_image(fname)
+        fnames, _ = QFileDialog.getOpenFileNames(self, 'Open file',
+                                                 DEFAULT_FOLDER, "Image files (*.jpg *.gif *.png)")
+        if fnames:
+            self.selected_image_paths = fnames  # Save all selected file paths
+            self.current_image_index = 0  # Reset index
+            self.current_image_path = fnames[0]  # Select the first file to display
+            self.preview_image(self.current_image_path)
+            self.update_image_counter()  # Update the counter display
 
 
     def preview_image(self, img):
@@ -94,11 +112,38 @@ class MainWindow(QtWidgets.QMainWindow):
         # Update the current file label (displays the file name currently in preview pane)
         self.fpCurrentFileLabel.setText(os.path.basename(img))
 
-    def add_photo(self):
+    def keyPressEvent(self, event):
         """
-        @brief Add the photo selected in the preview pane to the database. Record the entry in the database log
+        @brief Handle key press events to navigate through selected files with arrow keys.
 
-        The photo is copied to the database folder specifed in config settings, and the entry is recorded in the database log csv file.
+        """
+        if self.selected_image_paths:  # Only process keys if images have been loaded
+            if event.key() == QtCore.Qt.Key_Right:
+                self.current_image_index = min(self.current_image_index + 1, len(self.selected_image_paths) - 1)
+            elif event.key() == QtCore.Qt.Key_Left:
+                self.current_image_index = max(self.current_image_index - 1, 0)
+            else:
+                super().keyPressEvent(event)
+                return
+
+            # Update the current image and display it
+            self.current_image_path = self.selected_image_paths[self.current_image_index]
+            self.preview_image(self.current_image_path)
+            self.update_image_counter()  # Update the counter display
+
+    def update_image_counter(self):
+        """
+        @brief Update a label on the UI to show the current image index and total images loaded.
+
+        """
+        # Assuming you have a QLabel named imageCounterLabel to display the counter
+        self.imageCounterLabel.setText(f"Image {self.current_image_index + 1} of {len(self.selected_image_paths)}")
+
+    def add_photos(self):
+        """
+        @brief Add the photos selected in the preview pane to the database. Record the entry in the database log
+
+        Each photo is copied to the database folder specified in config settings, and the entry is recorded in the database log csv file.
         The details are pulled from the user selected fields in the GUI. The file name is generated according to the naming convention. 
         A warning is displayed if the file type already exists in the database or if a photo has not been selected, or if the serial number is invalid.
         """
@@ -107,44 +152,58 @@ class MainWindow(QtWidgets.QMainWindow):
         serial_number = self.snLineEdit.text()
         status = self.stausComboBox.currentText()
 
-        # Validate the serial number and image, infom user if invalid
-        if (not self.current_image_path or not self.validate_serial_number(serial_number)):
+        # Validate the serial number and image, inform user if invalid
+        if (not self.selected_image_paths or not self.validate_serial_number(serial_number)):
             QMessageBox.warning(self, "Warning", "No photo selected or serial number is invalid.")
+            return
 
-        # If the serial number is valid and a photo is selected
+        # If the serial number is valid and photos are selected
         else:
             # Set the destination folder to reside in the database with the serial number as the folder name
             serial_number_folder = os.path.join(DATA_FOLDER, serial_number)
             status_folder = os.path.join(serial_number_folder, status)
 
-            # # Check if serial number folder already exists, if not give warning
-            # if not os.path.exists(serial_number_folder):
-            #     reply = QMessageBox.question(self, "New Serial Number Warning", 
-            #         "This is a new serial number entry. Are you sure you want to add it?", QMessageBox.Yes | QMessageBox.No)
-            #     if reply == QMessageBox.No:
-            #         QMessageBox.information(self, "Cancelled", "Operation cancelled.")
-            #         return            
+            # Create the folder matching the serial number and status if they do not already exist
+            os.makedirs(status_folder, exist_ok=True)
 
-        # Create the folder matching the serial number and status if they do not already exist
-        os.makedirs(status_folder, exist_ok=True)
+            successful_files = 0  # Count of successfully added images
 
-        # Generate the file name according to naming convention
-        file_name = self.generate_file_name(serial_number)
+            try:
+                for image_path in self.selected_image_paths:
+                    # Update the current image path
+                    self.current_image_path = image_path  
+                    # Generate the file name according to naming convention
+                    file_name = self.generate_file_name(serial_number)
 
-        # Create a save path
-        destination_file = os.path.join(status_folder, file_name)
+                    # Create a save path
+                    destination_file = os.path.join(status_folder, file_name)
 
-        self.add_image_database(serial_number, status, destination_file)
+                    # Try to add the image to the database
+                    if self.add_image_database(serial_number, status, destination_file):
+                        successful_files += 1
+            except PermissionError:
+                QMessageBox.critical(self, "Error", 
+                                "Unable to write to the database file. Please close any other applications using it (e.g. Excel) and try again.")
+                return
+            else:
+                # Display the final result
+                QMessageBox.information(self, "Success", f"Added {successful_files} out of {len(self.selected_image_paths)} photos to the database.")
+                # Refresh the recent serial numbers list
+                self.refresh_serial_number_list()
 
 
     def add_image_database(self, serial_number, status, destination_file):
         """
         @brief Write a copy of the image to disk and add the details to the database log csv file.
 
-        """        
-        shutil.copy2(self.current_image_path, destination_file)
+        @returns True if the image was successfully added to the database, otherwise False
+        """
         self.write_to_csv(serial_number, status, destination_file)
-        QMessageBox.information(self, "Success", "Photo added to database.")       
+
+        # If the CSV file is writable, proceed with copying the image
+        shutil.copy2(self.current_image_path, destination_file)
+        return True
+   
 
     def validate_serial_number(self, serial_number):
         """
@@ -201,6 +260,40 @@ class MainWindow(QtWidgets.QMainWindow):
                 writer.writerow(["Date", "Time", "Serial Number", "Status", "Comments", "File Save Location"])
                 # Entry format
             writer.writerow([date, time, serial_number, status, comments, destination_file])
+
+    def refresh_serial_number_list(self):
+        """
+        Refreshes the list of serial numbers from the data folder.
+        """
+        self.serialNumberList.clear()  # Clear the list
+        folders = [name for name in os.listdir(DATA_FOLDER) if os.path.isdir(os.path.join(DATA_FOLDER, name))]
+        self.serialNumberList.addItems(folders)  # Add each folder name to the list
+
+    def serial_number_selected(self):
+        """
+        Handles the serial number selection event. Sets the text of the serial number field to the selected serial number.
+        """
+        selected_items = self.serialNumberList.selectedItems()
+        if selected_items:  # If there is a selected item
+            self.snLineEdit.setText(selected_items[0].text())
+
+    def go_previous(self):
+        """
+        Go to the previous image.
+        """
+        if self.current_image_index > 0:
+            self.current_image_index -= 1
+            self.preview_image(self.selected_image_paths[self.current_image_index])
+
+    def go_next(self):
+        """
+        Go to the next image.
+        """
+        if self.current_image_index < len(self.selected_image_paths) - 1:
+            self.current_image_index += 1
+            self.preview_image(self.selected_image_paths[self.current_image_index])
+
+
 
     
 if __name__ == '__main__':
