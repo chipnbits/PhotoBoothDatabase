@@ -112,33 +112,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Update the current file label (displays the file name currently in preview pane)
         self.fpCurrentFileLabel.setText(os.path.basename(img))
 
-    def keyPressEvent(self, event):
-        """
-        @brief Handle key press events to navigate through selected files with arrow keys.
-
-        """
-        if self.selected_image_paths:  # Only process keys if images have been loaded
-            if event.key() == QtCore.Qt.Key_Right:
-                self.current_image_index = min(self.current_image_index + 1, len(self.selected_image_paths) - 1)
-            elif event.key() == QtCore.Qt.Key_Left:
-                self.current_image_index = max(self.current_image_index - 1, 0)
-            else:
-                super().keyPressEvent(event)
-                return
-
-            # Update the current image and display it
-            self.current_image_path = self.selected_image_paths[self.current_image_index]
-            self.preview_image(self.current_image_path)
-            self.update_image_counter()  # Update the counter display
-
-    def update_image_counter(self):
-        """
-        @brief Update a label on the UI to show the current image index and total images loaded.
-
-        """
-        # Assuming you have a QLabel named imageCounterLabel to display the counter
-        self.imageCounterLabel.setText(f"Image {self.current_image_index + 1} of {len(self.selected_image_paths)}")
-
     def add_photos(self):
         """
         @brief Add the photos selected in the preview pane to the database. Record the entry in the database log
@@ -169,11 +142,11 @@ class MainWindow(QtWidgets.QMainWindow):
             successful_files = 0  # Count of successfully added images
 
             try:
-                for image_path in self.selected_image_paths:
+                for index, image_path in enumerate(self.selected_image_paths):
                     # Update the current image path
                     self.current_image_path = image_path  
                     # Generate the file name according to naming convention
-                    file_name = self.generate_file_name(serial_number)
+                    file_name = self.generate_file_name(serial_number, index)
 
                     # Create a save path
                     destination_file = os.path.join(status_folder, file_name)
@@ -213,15 +186,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # Replace this with more complex validation logic if needed
         return bool(serial_number and not serial_number.isspace())
     
-    def generate_file_name(self, serial_number):
+    def generate_file_name(self, serial_number, index):
         """
         @brief Generates a file name according to the naming convention specifed for the database.
 
         """  
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         _, file_extension = os.path.splitext(self.current_image_path)  # Extract extension from the original file path
-        file_name = f"{serial_number}_{timestamp}{file_extension}"
+        file_name = f"{serial_number}_{timestamp}_{index}{file_extension}"
         return file_name
+
         
     def get_latest_file(self, dir_path):
         """
@@ -277,21 +251,50 @@ class MainWindow(QtWidgets.QMainWindow):
         if selected_items:  # If there is a selected item
             self.snLineEdit.setText(selected_items[0].text())
 
+    def keyPressEvent(self, event):
+        """
+        @brief Handle key press events to navigate through selected files with arrow keys.
+
+        """
+        if self.selected_image_paths:  # Only process keys if images have been loaded
+            if event.key() == QtCore.Qt.Key_Right:
+                self.go_next()
+            elif event.key() == QtCore.Qt.Key_Left:
+                self.go_previous()
+            else:
+                super().keyPressEvent(event)
+                return
+
+
+    def update_image_counter(self):
+        """
+        @brief Update a label on the UI to show the current image index and total images loaded.
+
+        """
+        # Assuming you have a QLabel named imageCounterLabel to display the counter
+        self.imageCounterLabel.setText(f"Image {self.current_image_index + 1} of {len(self.selected_image_paths)}")
+
     def go_previous(self):
         """
         Go to the previous image.
         """
-        if self.current_image_index > 0:
-            self.current_image_index -= 1
-            self.preview_image(self.selected_image_paths[self.current_image_index])
+        self.current_image_index = max(self.current_image_index - 1, 0)
+        # Update the current image and display it
+        self.current_image_path = self.selected_image_paths[self.current_image_index]
+        self.preview_image(self.current_image_path)
+        self.update_image_counter()  # Update the counter display        
 
     def go_next(self):
         """
         Go to the next image.
         """
-        if self.current_image_index < len(self.selected_image_paths) - 1:
-            self.current_image_index += 1
-            self.preview_image(self.selected_image_paths[self.current_image_index])
+        self.current_image_index = min(self.current_image_index + 1, len(self.selected_image_paths) - 1)
+        # Update the current image and display it
+        self.current_image_path = self.selected_image_paths[self.current_image_index]
+        self.preview_image(self.current_image_path)
+        self.update_image_counter()  # Update the counter display
+
+
 
 
 
