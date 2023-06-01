@@ -33,6 +33,7 @@ This is a .json that should contain the locations:
 
 This requires pyinstaller.  Run the commands below and it will produce a .exe file int he /dist folder that should not be moved from withing the PhotoBooth folder location.  This .exe can run on machines without Python installed
 
+### Packaging the files for use on machine without Python installed
 `pip install pyinstaller`    
 
 Remember, when you use PyInstaller, you need to be in the active environment where you installed it (Windows in this case).
