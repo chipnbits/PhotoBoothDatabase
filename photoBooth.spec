@@ -5,10 +5,10 @@ block_cipher = None
 
 
 a = Analysis(
-    ['photoBooth.py'],
+    ['src\\photoBooth.py'],
     pathex=[],
     binaries=[],
-    datas=[('photoBooth.ui', '.'), ('trayicon.ico', '.'), ('trayicon.png', '.'), ('config.json', '.')],
+    datas=[('./resources/photoBooth.ui', 'resources/'), ('./resources/trayicon.ico', 'resources/'), ('./resources/trayicon.png', 'resources/')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['trayicon.ico'],
+    icon=['resources\\trayicon.ico'],
 )

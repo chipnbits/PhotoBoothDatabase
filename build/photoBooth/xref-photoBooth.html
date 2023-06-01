@@ -15,7 +15,7 @@
 
 <div class="node">
   <a name="photoBooth.py"></a>
-  <a target="code" href="///C:/Users/sghys/Desktop/PhotoBooth/photoBooth.py" type="text/plain"><tt>photoBooth.py</tt></a>
+  <a target="code" href="///C:/Users/sghys/Desktop/PhotoBooth/src/photoBooth.py" type="text/plain"><tt>photoBooth.py</tt></a>
 <span class="moduletype">Script</span>  <div class="import">
 imports:
     <a href="#PyQt5">PyQt5</a>
@@ -31,9 +31,7 @@ imports:
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
  &#8226;   <a href="#copyreg">copyreg</a>
- &#8226;   <a href="#csv">csv</a>
  &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#encodings">encodings</a>
  &#8226;   <a href="#encodings.aliases">encodings.aliases</a>
  &#8226;   <a href="#encodings.ascii">encodings.ascii</a>
@@ -157,10 +155,12 @@ imports:
  &#8226;   <a href="#encodings.uu_codec">encodings.uu_codec</a>
  &#8226;   <a href="#encodings.zlib_codec">encodings.zlib_codec</a>
  &#8226;   <a href="#enum">enum</a>
+ &#8226;   <a href="#file_manager">file_manager</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#heapq">heapq</a>
+ &#8226;   <a href="#image_pane">image_pane</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#keyword">keyword</a>
@@ -176,7 +176,6 @@ imports:
  &#8226;   <a href="#pyi_rth_pyqt5.py">pyi_rth_pyqt5.py</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#reprlib">reprlib</a>
- &#8226;   <a href="#shutil">shutil</a>
  &#8226;   <a href="#sre_compile">sre_compile</a>
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
@@ -270,7 +269,7 @@ imported by:
   <a target="code" href="///C:/Users/sghys/anaconda3/lib/site-packages/PyQt5/__init__.py" type="text/plain"><tt>PyQt5</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
 imports:
-    <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
+    <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
@@ -285,6 +284,7 @@ imported by:
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
+ &#8226;   <a href="#image_pane">image_pane</a>
  &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
 
   </div>
@@ -300,10 +300,12 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
+    <a href="#PyQt5">PyQt5</a>
+ &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
+ &#8226;   <a href="#image_pane">image_pane</a>
  &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
 
   </div>
@@ -320,10 +322,10 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#PyQt5">PyQt5</a>
- &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+    <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
+ &#8226;   <a href="#image_pane">image_pane</a>
  &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
 
   </div>
@@ -2310,8 +2312,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib.metadata">importlib.metadata</a>
- &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
+    <a href="#file_manager">file_manager</a>
+ &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
 
   </div>
 
@@ -2375,8 +2377,8 @@ imported by:
     <a href="#_strptime">_strptime</a>
  &#8226;   <a href="#calendar">calendar</a>
  &#8226;   <a href="#email.utils">email.utils</a>
+ &#8226;   <a href="#file_manager">file_manager</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
- &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
 
   </div>
 
@@ -5438,6 +5440,25 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="file_manager"></a>
+  <a target="code" href="///C:/Users/sghys/Desktop/PhotoBooth/src/file_manager.py" type="text/plain"><tt>file_manager</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#csv">csv</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#shutil">shutil</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#photoBooth.py">photoBooth.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="fnmatch"></a>
   <a target="code" href="///C:/Users/sghys/anaconda3/lib/fnmatch.py" type="text/plain"><tt>fnmatch</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -5800,6 +5821,25 @@ imports:
   <div class="import">
 imported by:
     <a href="#urllib.request">urllib.request</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="image_pane"></a>
+  <a target="code" href="///C:/Users/sghys/Desktop/PhotoBooth/src/image_pane.py" type="text/plain"><tt>image_pane</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt5">PyQt5</a>
+ &#8226;   <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+ &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
+ &#8226;   <a href="#os">os</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#photoBooth.py">photoBooth.py</a>
 
   </div>
 
@@ -6601,6 +6641,7 @@ imported by:
  &#8226;   <a href="#configparser">configparser</a>
  &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#email.utils">email.utils</a>
+ &#8226;   <a href="#file_manager">file_manager</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#getopt">getopt</a>
@@ -6608,6 +6649,7 @@ imported by:
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#gzip">gzip</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
+ &#8226;   <a href="#image_pane">image_pane</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#linecache">linecache</a>
@@ -7123,7 +7165,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#argparse">argparse</a>
- &#8226;   <a href="#photoBooth.py">photoBooth.py</a>
+ &#8226;   <a href="#file_manager">file_manager</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#zipfile">zipfile</a>
