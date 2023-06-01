@@ -14,11 +14,13 @@ Note, this application is OS dependent and is made to run on a Windows machine
 
 These three paths need to be set, replace with suitable path names for the system
 
+```
 {
     "default_folder": "C:\\Users\\sghys\\Desktop\\PhotoBooth\\Test Images",
     "data_folder": "C:\\Users\\sghys\\Desktop\\PhotoBooth\\Database Images",
     "csv_data_file": "C:\\Users\\sghys\\Desktop\\PhotoBooth\\database.csv"
 }
+```
 
 ### Packaging the files for use on machine without Python installed
 `pip install pyinstaller`    
