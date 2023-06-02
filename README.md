@@ -7,6 +7,7 @@ Python source files are found in /src
 - photoBooth.py : The main program file handles UI, etc
 - file_manager.py : A class to manage the transfer of files and writing to log
 - image_pane.py: A class to handle the navigation and display of images in the program
+- config.py: file path settings handler
 
 Additional resource files
 - photoBooth.ui : The GUI settings that can be edited or modified using Qt Designer https://build-system.fman.io/qt-designer-download
