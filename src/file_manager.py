@@ -19,18 +19,24 @@ class FileManager:
     """
 
     serial_number = module_data['serial_number']
-    # Create a subfolder for the serial number if it does not exist
+    # Create a subfolder for the serial number and status if it does not exist
+    # Assuming serial_number is defined somewhere in your code
     serial_number_folder = os.path.join(self.save_folder, serial_number)
-    os.makedirs(serial_number_folder, exist_ok=True)
 
-    successful_files = 0  # Count of successfully added images
+    # Assuming module_data is a dictionary and status is a key in it
+    status_subfolder = os.path.join(serial_number_folder, module_data['status'])
 
+    # Create the status subfolder if it doesn't exist
+    if not os.path.exists(status_subfolder):
+        os.makedirs(status_subfolder)
+
+    successful_files = 0
     # Copy or move the images from the default folder to the serial number folder
     for index, img_path in enumerate(img_paths):
       # Generate the new file name
       new_file_name = self.generate_file_name(img_path, serial_number, index)
       # Copy or move the file to the serial number folder
-      destination_file = os.path.join(serial_number_folder, new_file_name)
+      destination_file = os.path.join(status_subfolder, new_file_name)
       if move:
         shutil.move(img_path, destination_file)
       else:
@@ -102,8 +108,8 @@ class FileManager:
     """
 
     try:
-      # Retrieve all folders in the directory
-      folders = [name for name in os.listdir(self.save_folder) if os.path.isdir(os.path.join(self.save_folder, name))]
+      # Retrieve all folders in the directory, ignoring hidden ones
+      folders = [name for name in os.listdir(self.save_folder) if os.path.isdir(os.path.join(self.save_folder, name)) and not name.startswith('.')]
       # Sort folders by modification time in descending order
       folders.sort(key=lambda x: os.path.getmtime(os.path.join(self.save_folder, x)), reverse=True)
     except FileNotFoundError:
