@@ -49,15 +49,20 @@ class ImagePane():
       # Update the image counter label
       self.update_image_counter()
     except IndexError:  # Handles out of range index
-      pass  # Maybe you want to display a default image or clear the current image
+      self.image_preview_label.clear()
+      self.fpCurrentFileLabel.clear()
     except TypeError:  # Handles case where selected_image_paths is None
-      pass  # Maybe you want to display a default image or clear the current image
+      self.image_preview_label.clear()
+      self.fpCurrentFileLabel.clear()
 
   def update_image_counter(self):
     """
     @brief Update a label on the UI to show the current image index and total images loaded.
     """
-    self.image_counter_label.setText(f"Image {self.current_image_index + 1} of {len(self.selected_image_paths)}")
+    if self.selected_image_paths is None or len(self.selected_image_paths) == 0:
+      self.image_counter_label.setText("None loaded")
+    else:
+      self.image_counter_label.setText(f"Image {self.current_image_index + 1} of {len(self.selected_image_paths)}")
 
   def go_previous(self):
     """
@@ -86,6 +91,7 @@ class ImagePane():
     @brief Refreshes the preview pane to display the current image.
     """
     self.show_image()
+    self.update_image_counter()
 
   def get_current_image_paths(self):
     """
@@ -94,4 +100,12 @@ class ImagePane():
     @returns A list of image paths
     """
     return self.selected_image_paths
+  
+  def clear_filepaths(self):
+    """
+    @brief Clears the selected image paths.
+    """
+    self.selected_image_paths = None
+    self.current_image_index = 0
+    self.refresh()
 

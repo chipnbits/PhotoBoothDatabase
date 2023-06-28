@@ -115,7 +115,7 @@ class FileManager:
     except FileNotFoundError:
       folders = []
             
-    # Take the 800 most recent folders (serial numbers)
+    # Take the 50 most recent folders (serial numbers)
     folders = folders[:50]
         
     return folders

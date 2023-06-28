@@ -102,10 +102,16 @@ class MainWindow(QtWidgets.QMainWindow):
     if (not image_file_paths or not self.validate_serial_number(module_data['serial_number'])):
       QMessageBox.warning(self, "Warning", "No photo selected or serial number is invalid.")
       return
+    
+    # Check from the radio buttons if this is copy or a move operation
+    isMove = self.radioButton_move.isChecked()
 
     # Try to add the photos to the database
     try:
-      successful_files = self.file_manager.add_photos(image_file_paths, module_data)
+      successful_files = self.file_manager.add_photos(image_file_paths, module_data, move = isMove)
+      if isMove:
+        self.image_pane.clear_filepaths()  # Clear out the filepaths from the image pane since they are moved
+
     except PermissionError:
       QMessageBox.critical(self, "Error", 
               "Unable to write to the database file. Please close any other applications using it (e.g. Excel) and try again.")
