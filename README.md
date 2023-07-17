@@ -1,4 +1,7 @@
 # PhotoBoothDatabase
+[![Image](https://i.imgur.com/dcGuVou.png)](IMAGE_URL)
+
+
 A small GUI application to manage photo documentation of ITk Modules 
 
 Note, this application is OS dependent and is made to run on a Windows machine
